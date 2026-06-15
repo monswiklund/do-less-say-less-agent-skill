@@ -6,6 +6,8 @@ Portable skill pack for Codex, Claude Code, Google Antigravity, and Antigravity 
 
 ```text
 skills/do-less-say-less/  # core behavior: smallest correct thing, fewest precise words
+skills/dlsl-compress/     # shrink memory/docs, preserve code/paths/URLs
+skills/dlsl-commit/       # tiny Conventional Commit messages
 skills/dlsl-spec/         # create/amend/backprop SPEC.md
 skills/dlsl-build/        # implement smallest task from SPEC.md
 skills/dlsl-check/        # read-only SPEC.md drift checker
@@ -66,6 +68,8 @@ Explicit invocations:
 
 ```text
 $do-less-say-less
+$dlsl-compress
+$dlsl-commit
 $dlsl-spec
 $dlsl-build
 $dlsl-check
@@ -81,6 +85,8 @@ caveman
 minimal solution
 shortest path
 be brief
+caveman-compress
+write commit message
 spec this idea
 build --next
 check drift
@@ -89,3 +95,12 @@ ponytail debt
 ```
 
 Restart the target app if it does not notice new skills immediately.
+
+## Heritage
+
+This pack preserves the useful core of:
+
+- Ponytail: YAGNI, deletion over addition, stdlib/native first, shortest correct diff, intensity levels.
+- Caveman: output compression, persistent terse voice, no filler/tool narration, preserve code/errors/paths, keep user language.
+
+Inspired by and compatible with MIT-licensed skill patterns from `ponytail` and [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman).

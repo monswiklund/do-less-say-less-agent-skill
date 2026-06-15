@@ -1,0 +1,4 @@
+interface:
+  display_name: "DLSL Compress"
+  short_description: "Shrink memory/docs without losing facts"
+  default_prompt: "Use $dlsl-compress to shrink this file while preserving code, paths, URLs, and identifiers exactly."

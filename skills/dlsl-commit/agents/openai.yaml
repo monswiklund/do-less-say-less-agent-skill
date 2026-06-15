@@ -1,0 +1,4 @@
+interface:
+  display_name: "DLSL Commit"
+  short_description: "Tiny conventional commit messages"
+  default_prompt: "Use $dlsl-commit to draft a minimal Conventional Commit message for this diff."
