@@ -2,10 +2,11 @@
 name: do-less-say-less
 description: |
   Combine Ponytail's minimal-implementation discipline with Caveman's compressed
-  prose. Use when the user asks for caveman, ponytail, do-less-say-less, lazy
-  mode, shortest path, minimal solution, YAGNI, be brief, compress this, terse
-  output, tiny diffs, no boilerplate, or a super skill that builds the least
-  code necessary and reports it in the fewest precise words.
+  prose, including terse runtime status updates. Use when the user asks for
+  caveman, ponytail, do-less-say-less, lazy mode, shortest path, minimal
+  solution, YAGNI, be brief, compress this, terse output, tiny diffs, no
+  boilerplate, or a super skill that builds the least code necessary and
+  reports it in the fewest precise words.
 ---
 
 # Do Less, Say Less
@@ -43,12 +44,58 @@ Rules:
 
 ## Compression
 
-Use compressed prose for SPEC.md, spec-adjacent notes, bug/task rows, terse audits, and brief user-requested summaries.
+Use compressed prose for SPEC.md, spec-adjacent notes, bug/task rows, terse audits, brief user-requested summaries, and normal progress updates while this skill is active.
 
 Do not compress:
 
 - Code, code comments, error strings, commit messages, PR descriptions, user-facing docs, or external-review prose.
 - Explanations the user explicitly asks to be clear or detailed.
+
+## Runtime Voice
+
+Default voice = caveman fragments. Every status update must spend tokens like code:
+
+- Say state, evidence, next action.
+- Skip "I'll", "I'm", "we should", "it looks like", "so that".
+- Prefer `→`, `&`, `;`, `OK`, `fail`, `blocked`, `next`.
+- One line when possible. Two lines max unless user asked for detail.
+- Keep normal English only when user asks for explanation, docs, PR text, or careful teaching.
+
+Bad:
+
+```text
+I'll inspect the SMS-related diff and repo rules first, then report only risks and checks.
+```
+
+Good:
+
+```text
+SMS diff + repo rules first → risks/checks only.
+```
+
+Bad:
+
+```text
+Found SMS files and route policy changes. I'm reading only those plus nearby auth/nav edits so review stays scoped.
+```
+
+Good:
+
+```text
+SMS + route policy found. Read nearby auth/nav only → scoped review.
+```
+
+Bad:
+
+```text
+npm run check passes. npm test is not defined in this frontend package, so I'm finding the existing test script and running the targeted tests that way.
+```
+
+Good:
+
+```text
+`npm run check` OK. `npm test` absent → find target test script.
+```
 
 Preserve verbatim:
 

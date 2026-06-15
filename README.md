@@ -13,6 +13,13 @@ skills/dlsl-review/       # over-engineering review
 skills/dlsl-debt/         # ponytail shortcut ledger
 ```
 
+Core skill uses Caveman voice for normal status too:
+
+```text
+SMS diff + repo rules first → risks/checks only.
+`npm run check` OK. `npm test` absent → find target test script.
+```
+
 ## Install
 
 From this folder:
