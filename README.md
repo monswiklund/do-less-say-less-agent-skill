@@ -78,6 +78,12 @@ Older Codex setups that still scan `~/.codex/skills`:
 sh install.sh --codex-legacy
 ```
 
+Do not combine `--all` and `--codex-legacy` on modern Codex/Antigravity desktop. Both scan roots can appear as `Personal`, causing duplicate rows. Installer refuses that combo unless forced:
+
+```sh
+sh install.sh --all --codex-legacy --allow-duplicates
+```
+
 ## Use
 
 Explicit invocations:

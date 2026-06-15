@@ -9,6 +9,7 @@ usage() {
 Usage:
   sh install.sh --all
   sh install.sh --all --no-init
+  sh install.sh --all --codex-legacy --allow-duplicates
   sh install.sh --codex
   sh install.sh --codex-legacy
   sh install.sh --claude
@@ -29,6 +30,10 @@ Targets:
   Claude Code project:     <repo>/.claude/skills
   Antigravity project:     <repo>/.agents/skills
   Antigravity CLI project: <repo>/.agent/skills
+
+Notes:
+  Do not combine --all and --codex-legacy unless your Codex only reads ~/.codex.
+  Modern Codex/Antigravity desktop read ~/.agents/skills; installing both causes duplicate skill rows.
 EOF
 }
 
@@ -129,16 +134,38 @@ fi
 
 : "${HOME:?HOME is not set}"
 write_init=1
+has_all=0
+has_codex_legacy=0
+allow_duplicates=0
 for arg in "$@"; do
   if [ "$arg" = "--no-init" ]; then
     write_init=0
   fi
+  if [ "$arg" = "--all" ]; then
+    has_all=1
+  fi
+  if [ "$arg" = "--codex-legacy" ]; then
+    has_codex_legacy=1
+  fi
+  if [ "$arg" = "--allow-duplicates" ]; then
+    allow_duplicates=1
+  fi
 done
+if [ "$has_all" -eq 1 ] && [ "$has_codex_legacy" -eq 1 ] && [ "$allow_duplicates" -eq 0 ]; then
+  printf 'Refusing --all + --codex-legacy: would duplicate Codex/Antigravity skill rows.\n' >&2
+  printf 'Use --all for modern Codex, or --codex-legacy alone for old Codex.\n' >&2
+  printf 'Override: --all --codex-legacy --allow-duplicates\n' >&2
+  exit 1
+fi
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
     --no-init)
       write_init=0
+      shift
+      ;;
+    --allow-duplicates)
+      allow_duplicates=1
       shift
       ;;
     --all)
