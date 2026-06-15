@@ -8,6 +8,7 @@ usage() {
   cat <<'EOF'
 Usage:
   sh install.sh --all
+  sh install.sh --all --no-init
   sh install.sh --codex
   sh install.sh --codex-legacy
   sh install.sh --claude
@@ -29,6 +30,42 @@ Targets:
   Antigravity project:     <repo>/.agents/skills
   Antigravity CLI project: <repo>/.agent/skills
 EOF
+}
+
+install_init_block() {
+  target_file=$1
+  rel_prefix=$2
+  tmp_file="${target_file}.tmp.$$"
+
+  mkdir -p "$(dirname "$target_file")"
+  if [ -f "$target_file" ]; then
+    awk '
+      /<!-- dlsl-begin -->/ {skip=1; next}
+      /<!-- dlsl-end -->/ {skip=0; next}
+      !skip {print}
+    ' "$target_file" > "$tmp_file"
+  else
+    : > "$tmp_file"
+  fi
+
+  {
+    printf '\n<!-- dlsl-begin -->\n'
+    printf '# Do Less, Say Less\n\n'
+    printf '@%s/skills/do-less-say-less/SKILL.md\n' "$rel_prefix"
+    printf '@%s/skills/dlsl-compress/SKILL.md\n' "$rel_prefix"
+    printf '@%s/skills/dlsl-commit/SKILL.md\n' "$rel_prefix"
+    printf '@%s/skills/dlsl-spec/SKILL.md\n' "$rel_prefix"
+    printf '@%s/skills/dlsl-build/SKILL.md\n' "$rel_prefix"
+    printf '@%s/skills/dlsl-check/SKILL.md\n' "$rel_prefix"
+    printf '@%s/skills/dlsl-review/SKILL.md\n' "$rel_prefix"
+    printf '@%s/skills/dlsl-debt/SKILL.md\n\n' "$rel_prefix"
+    printf 'ACTIVE EVERY RESPONSE until `normal mode`, `stop ponytail`, `stop caveman`, or `stop do-less-say-less`.\n'
+    printf 'Default: smallest correct change; caveman runtime voice; one micro-refactor after green check.\n'
+    printf '<!-- dlsl-end -->\n'
+  } >> "$tmp_file"
+
+  mv "$tmp_file" "$target_file"
+  printf 'Init block -> %s\n' "$target_file"
 }
 
 copy_one_skill() {
@@ -66,6 +103,17 @@ copy_all_skills() {
   fi
 }
 
+install_target() {
+  skills_root=$1
+  init_file=$2
+  rel_prefix=$3
+
+  copy_all_skills "$skills_root"
+  if [ "$write_init" -eq 1 ]; then
+    install_init_block "$init_file" "$rel_prefix"
+  fi
+}
+
 need_arg() {
   if [ "$#" -lt 2 ]; then
     printf 'Missing path for %s\n\n' "$1" >&2
@@ -80,53 +128,63 @@ if [ "$#" -eq 0 ]; then
 fi
 
 : "${HOME:?HOME is not set}"
+write_init=1
+for arg in "$@"; do
+  if [ "$arg" = "--no-init" ]; then
+    write_init=0
+  fi
+done
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
+    --no-init)
+      write_init=0
+      shift
+      ;;
     --all)
-      copy_all_skills "$HOME/.agents/skills"
-      copy_all_skills "$HOME/.claude/skills"
-      copy_all_skills "$HOME/.gemini/antigravity-cli/skills"
+      install_target "$HOME/.agents/skills" "$HOME/.agents/AGENTS.md" "."
+      install_target "$HOME/.claude/skills" "$HOME/.claude/CLAUDE.md" "."
+      install_target "$HOME/.gemini/antigravity-cli/skills" "$HOME/.gemini/antigravity-cli/GEMINI.md" "."
       shift
       ;;
     --codex)
-      copy_all_skills "$HOME/.agents/skills"
+      install_target "$HOME/.agents/skills" "$HOME/.agents/AGENTS.md" "."
       shift
       ;;
     --codex-legacy)
-      copy_all_skills "$HOME/.codex/skills"
+      install_target "$HOME/.codex/skills" "$HOME/.codex/AGENTS.md" "."
       shift
       ;;
     --claude)
-      copy_all_skills "$HOME/.claude/skills"
+      install_target "$HOME/.claude/skills" "$HOME/.claude/CLAUDE.md" "."
       shift
       ;;
     --antigravity)
-      copy_all_skills "$HOME/.agents/skills"
+      install_target "$HOME/.agents/skills" "$HOME/.agents/AGENTS.md" "."
       shift
       ;;
     --antigravity-cli)
-      copy_all_skills "$HOME/.gemini/antigravity-cli/skills"
+      install_target "$HOME/.gemini/antigravity-cli/skills" "$HOME/.gemini/antigravity-cli/GEMINI.md" "."
       shift
       ;;
     --codex-project)
       need_arg "$@"
-      copy_all_skills "$2/.agents/skills"
+      install_target "$2/.agents/skills" "$2/AGENTS.md" ".agents"
       shift 2
       ;;
     --claude-project)
       need_arg "$@"
-      copy_all_skills "$2/.claude/skills"
+      install_target "$2/.claude/skills" "$2/CLAUDE.md" ".claude"
       shift 2
       ;;
     --antigravity-project)
       need_arg "$@"
-      copy_all_skills "$2/.agents/skills"
+      install_target "$2/.agents/skills" "$2/AGENTS.md" ".agents"
       shift 2
       ;;
     --antigravity-cli-project)
       need_arg "$@"
-      copy_all_skills "$2/.agent/skills"
+      install_target "$2/.agent/skills" "$2/GEMINI.md" ".agent"
       shift 2
       ;;
     -h|--help)

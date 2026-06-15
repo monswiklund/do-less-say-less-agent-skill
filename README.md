@@ -38,6 +38,20 @@ That installs all skills to:
 ~/.gemini/antigravity-cli/skills         # Antigravity CLI
 ```
 
+It also writes an idempotent init block so the mode persists across turns:
+
+```text
+~/.agents/AGENTS.md
+~/.claude/CLAUDE.md
+~/.gemini/antigravity-cli/GEMINI.md
+```
+
+Copy skills only, no init block:
+
+```sh
+sh install.sh --all --no-init
+```
+
 Target one tool:
 
 ```sh
@@ -55,6 +69,8 @@ sh install.sh --claude-project /path/to/repo
 sh install.sh --antigravity-project /path/to/repo
 sh install.sh --antigravity-cli-project /path/to/repo
 ```
+
+Project installs write `.agents/skills`, `.claude/skills`, or `.agent/skills`, plus a marker block in `AGENTS.md`, `CLAUDE.md`, or `GEMINI.md`.
 
 Older Codex setups that still scan `~/.codex/skills`:
 
@@ -101,6 +117,7 @@ Restart the target app if it does not notice new skills immediately.
 This pack preserves the useful core of:
 
 - Ponytail: YAGNI, deletion over addition, stdlib/native first, shortest correct diff, intensity levels.
+- Ponytail finish pass: after green checks, one micro-refactor only; delete local waste, no new abstraction.
 - Caveman: output compression, persistent terse voice, no filler/tool narration, preserve code/errors/paths, keep user language.
 
 Inspired by and compatible with MIT-licensed skill patterns from `ponytail` and [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman).

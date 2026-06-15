@@ -39,10 +39,25 @@ Per task:
 2. Edit minimum code.
 3. Add one smallest check for non-trivial logic.
 4. Run verification.
-5. Pass → flip `~` → `x`.
-6. Fail → classify before retry:
+5. Pass → run Finish Pass.
+6. Pass after Finish Pass → flip `~` → `x`.
+7. Fail → classify before retry:
    - code bug → fix code, rerun.
    - spec wrong / edge unspecified → run `dlsl-spec bug: <cause>` workflow, then resume.
+
+## Finish Pass
+
+After verification passes, do one micro-refactor pass:
+
+- Delete dead code introduced by task.
+- Remove unused imports, vars, logs, comments, and temporary scaffolding.
+- Inline one-use helper/constant created during task if clearer.
+- Collapse duplicated branch only when obvious and behavior unchanged.
+- No new abstractions.
+- No style-only churn.
+- Rerun same verification if any file changed.
+
+Stop after first useful tiny cleanup. If none, report `micro-refactor: none`.
 
 ## Boundaries
 
@@ -56,5 +71,6 @@ Per task:
 ```text
 Done: T<n> <smallest change>.
 Check: <command> OK.
+micro-refactor: <done|none>.
 Skipped: <abstraction/dependency/future work>; add when <real trigger>.
 ```

@@ -65,6 +65,25 @@ Rules:
 - Mark deliberate shortcuts with a `ponytail:` comment that names ceiling and upgrade path.
 - Non-trivial logic leaves one runnable check: smallest assert/demo/test that would fail if behavior breaks. Trivial one-liners need no test.
 
+## Finish Pass
+
+After checks pass, run one micro-refactor pass before final answer:
+
+- Delete dead code introduced by change.
+- Remove unused imports, vars, logs, comments, and local scaffolding.
+- Inline one-use helper/constant created during task if clearer.
+- Collapse duplicated branch only when obvious and behavior unchanged.
+- Keep behavior unchanged.
+- No new abstraction.
+- No style-only churn.
+- Rerun same check if any file changed.
+
+Stop after first useful tiny cleanup. If none:
+
+```text
+micro-refactor: none
+```
+
 ## Compression
 
 Use compressed prose for SPEC.md, spec-adjacent notes, bug/task rows, terse audits, brief user-requested summaries, and normal progress updates while this skill is active.
@@ -216,7 +235,7 @@ Pattern:
 ```
 Done: <smallest working change>.
 Skipped: <boilerplate/abstraction/dependency>.
-Check: <command/result>; add <larger thing> when <real trigger>.
+Check: <command/result>; micro-refactor: <done|none>; add <larger thing> when <real trigger>.
 ```
 
 For reviews/audits: findings first, highest risk first, file/line when available. No praise, no tour.
