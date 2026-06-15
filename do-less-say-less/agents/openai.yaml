@@ -1,0 +1,4 @@
+interface:
+  display_name: "Do Less, Say Less"
+  short_description: "Minimal code with compressed prose"
+  default_prompt: "Use $do-less-say-less to solve this with the smallest working change and terse output."
