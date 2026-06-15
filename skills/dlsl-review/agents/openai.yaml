@@ -1,0 +1,4 @@
+interface:
+  display_name: "DLSL Review"
+  short_description: "Find code to delete or simplify"
+  default_prompt: "Use $dlsl-review to find over-engineering and the smallest replacements."

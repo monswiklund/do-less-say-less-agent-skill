@@ -1,9 +1,8 @@
 #!/usr/bin/env sh
 set -eu
 
-skill_name="do-less-say-less"
 bundle_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-src_dir="$bundle_dir/$skill_name"
+skills_dir="$bundle_dir/skills"
 
 usage() {
   cat <<'EOF'
@@ -20,32 +19,51 @@ Usage:
   sh install.sh --antigravity-cli-project /path/to/repo
 
 Targets:
-  Codex user:             ~/.agents/skills
-  Codex legacy user:      ~/.codex/skills
-  Claude Code user:       ~/.claude/skills
-  Antigravity desktop:    ~/.agents/skills
-  Antigravity CLI user:   ~/.gemini/antigravity-cli/skills
-  Codex project:          <repo>/.agents/skills
-  Claude Code project:    <repo>/.claude/skills
-  Antigravity project:    <repo>/.agents/skills
-  Antigravity CLI project:<repo>/.agent/skills
+  Codex user:              ~/.agents/skills
+  Codex legacy user:       ~/.codex/skills
+  Claude Code user:        ~/.claude/skills
+  Antigravity desktop:     ~/.agents/skills
+  Antigravity CLI user:    ~/.gemini/antigravity-cli/skills
+  Codex project:           <repo>/.agents/skills
+  Claude Code project:     <repo>/.claude/skills
+  Antigravity project:     <repo>/.agents/skills
+  Antigravity CLI project: <repo>/.agent/skills
 EOF
 }
 
-copy_skill() {
-  dest_root=$1
+copy_one_skill() {
+  src_dir=$1
+  dest_root=$2
+  skill_name=$(basename "$src_dir")
   dest_dir="$dest_root/$skill_name"
-
-  if [ ! -d "$src_dir" ]; then
-    printf 'Missing skill folder: %s\n' "$src_dir" >&2
-    exit 1
-  fi
 
   mkdir -p "$dest_root"
   rm -rf "$dest_dir"
   mkdir -p "$dest_dir"
   (cd "$src_dir" && tar cf - .) | (cd "$dest_dir" && tar xf -)
   printf 'Installed %s -> %s\n' "$skill_name" "$dest_dir"
+}
+
+copy_all_skills() {
+  dest_root=$1
+
+  if [ ! -d "$skills_dir" ]; then
+    printf 'Missing skills folder: %s\n' "$skills_dir" >&2
+    exit 1
+  fi
+
+  found=0
+  for src_dir in "$skills_dir"/*; do
+    [ -d "$src_dir" ] || continue
+    [ -f "$src_dir/SKILL.md" ] || continue
+    found=1
+    copy_one_skill "$src_dir" "$dest_root"
+  done
+
+  if [ "$found" -eq 0 ]; then
+    printf 'No skills found in %s\n' "$skills_dir" >&2
+    exit 1
+  fi
 }
 
 need_arg() {
@@ -66,49 +84,49 @@ fi
 while [ "$#" -gt 0 ]; do
   case "$1" in
     --all)
-      copy_skill "$HOME/.agents/skills"
-      copy_skill "$HOME/.claude/skills"
-      copy_skill "$HOME/.gemini/antigravity-cli/skills"
+      copy_all_skills "$HOME/.agents/skills"
+      copy_all_skills "$HOME/.claude/skills"
+      copy_all_skills "$HOME/.gemini/antigravity-cli/skills"
       shift
       ;;
     --codex)
-      copy_skill "$HOME/.agents/skills"
+      copy_all_skills "$HOME/.agents/skills"
       shift
       ;;
     --codex-legacy)
-      copy_skill "$HOME/.codex/skills"
+      copy_all_skills "$HOME/.codex/skills"
       shift
       ;;
     --claude)
-      copy_skill "$HOME/.claude/skills"
+      copy_all_skills "$HOME/.claude/skills"
       shift
       ;;
     --antigravity)
-      copy_skill "$HOME/.agents/skills"
+      copy_all_skills "$HOME/.agents/skills"
       shift
       ;;
     --antigravity-cli)
-      copy_skill "$HOME/.gemini/antigravity-cli/skills"
+      copy_all_skills "$HOME/.gemini/antigravity-cli/skills"
       shift
       ;;
     --codex-project)
       need_arg "$@"
-      copy_skill "$2/.agents/skills"
+      copy_all_skills "$2/.agents/skills"
       shift 2
       ;;
     --claude-project)
       need_arg "$@"
-      copy_skill "$2/.claude/skills"
+      copy_all_skills "$2/.claude/skills"
       shift 2
       ;;
     --antigravity-project)
       need_arg "$@"
-      copy_skill "$2/.agents/skills"
+      copy_all_skills "$2/.agents/skills"
       shift 2
       ;;
     --antigravity-cli-project)
       need_arg "$@"
-      copy_skill "$2/.agent/skills"
+      copy_all_skills "$2/.agent/skills"
       shift 2
       ;;
     -h|--help)

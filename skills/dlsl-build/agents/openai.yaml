@@ -1,0 +1,4 @@
+interface:
+  display_name: "DLSL Build"
+  short_description: "Smallest implementation from SPEC.md"
+  default_prompt: "Use $dlsl-build to implement the next SPEC.md task with the smallest correct diff."

@@ -1,0 +1,60 @@
+---
+name: dlsl-build
+description: |
+  Do Less, Say Less build workflow. Implement the smallest correct change from
+  SPEC.md tasks while preserving §V invariants and §I interfaces. Use when the
+  user says /dlsl-build, dlsl build, build --next, build §T.n, implement next
+  task, run the build, execute the spec, or asks to implement SPEC.md.
+---
+
+# dlsl-build
+
+Implement from `SPEC.md`. Minimal diff. No commits, staging, or speculative work.
+
+## Load
+
+1. Read `SPEC.md`. If missing → tell user to run `dlsl-spec` first. Stop.
+2. Parse args:
+   - `§T.n` → that task only.
+   - `--next` → lowest `.` or `~`.
+   - `--all` or empty → all `.` rows in order.
+
+## Plan
+
+For chosen task(s):
+
+- Cite relevant §V invariants.
+- Cite touched §I interfaces.
+- Name files to edit/create.
+- Pick smallest runnable check.
+- Prefer deletion, stdlib, native platform, existing deps, one-liners, then minimal custom code.
+
+Show concise plan unless user already gave explicit auto-build instruction.
+
+## Execute
+
+Per task:
+
+1. Flip task `.` → `~`.
+2. Edit minimum code.
+3. Add one smallest check for non-trivial logic.
+4. Run verification.
+5. Pass → flip `~` → `x`.
+6. Fail → classify before retry:
+   - code bug → fix code, rerun.
+   - spec wrong / edge unspecified → run `dlsl-spec bug: <cause>` workflow, then resume.
+
+## Boundaries
+
+- Only edit `SPEC.md` task status from this workflow.
+- Other spec edits go through `dlsl-spec`.
+- Never cut validation, security, data-safety, accessibility, or explicit requirements.
+- Do not add dependencies unless existing platform cannot do the job cleanly.
+
+## Output
+
+```text
+Done: T<n> <smallest change>.
+Check: <command> OK.
+Skipped: <abstraction/dependency/future work>; add when <real trigger>.
+```

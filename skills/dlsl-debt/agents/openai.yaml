@@ -1,0 +1,4 @@
+interface:
+  display_name: "DLSL Debt"
+  short_description: "Collect ponytail shortcut markers"
+  default_prompt: "Use $dlsl-debt to list every ponytail shortcut marker and missing trigger."

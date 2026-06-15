@@ -1,11 +1,16 @@
-# Do Less, Say Less Agent Skill
+# Do Less, Say Less Agent Skills
 
-Portable agent skill bundle for Codex, Claude Code, Google Antigravity, and Antigravity CLI.
+Portable skill pack for Codex, Claude Code, Google Antigravity, and Antigravity CLI.
 
-The reusable skill is in:
+## Skills
 
 ```text
-do-less-say-less/SKILL.md
+skills/do-less-say-less/  # core behavior: smallest correct thing, fewest precise words
+skills/dlsl-spec/         # create/amend/backprop SPEC.md
+skills/dlsl-build/        # implement smallest task from SPEC.md
+skills/dlsl-check/        # read-only SPEC.md drift checker
+skills/dlsl-review/       # over-engineering review
+skills/dlsl-debt/         # ponytail shortcut ledger
 ```
 
 ## Install
@@ -16,12 +21,12 @@ From this folder:
 sh install.sh --all
 ```
 
-That installs the skill to:
+That installs all skills to:
 
 ```text
-~/.agents/skills/do-less-say-less                  # Codex and Antigravity desktop
-~/.claude/skills/do-less-say-less                  # Claude Code
-~/.gemini/antigravity-cli/skills/do-less-say-less  # Antigravity CLI
+~/.agents/skills                         # Codex and Antigravity desktop
+~/.claude/skills                         # Claude Code
+~/.gemini/antigravity-cli/skills         # Antigravity CLI
 ```
 
 Target one tool:
@@ -50,14 +55,18 @@ sh install.sh --codex-legacy
 
 ## Use
 
-Invoke explicitly:
+Explicit invocations:
 
 ```text
 $do-less-say-less
-/do-less-say-less
+$dlsl-spec
+$dlsl-build
+$dlsl-check
+$dlsl-review
+$dlsl-debt
 ```
 
-Or ask with trigger phrases such as:
+Trigger phrases also work:
 
 ```text
 ponytail
@@ -65,7 +74,11 @@ caveman
 minimal solution
 shortest path
 be brief
-do less, say less
+spec this idea
+build --next
+check drift
+review for over-engineering
+ponytail debt
 ```
 
-Restart the target app if it does not notice the new skill immediately.
+Restart the target app if it does not notice new skills immediately.

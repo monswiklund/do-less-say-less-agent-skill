@@ -1,0 +1,4 @@
+interface:
+  display_name: "DLSL Check"
+  short_description: "Read-only spec drift checker"
+  default_prompt: "Use $dlsl-check to compare SPEC.md against the code without editing anything."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "DLSL Spec"
+  short_description: "Minimal compressed SPEC.md workflow"
+  default_prompt: "Use $dlsl-spec to write or amend SPEC.md with minimal scope and compressed precision."
