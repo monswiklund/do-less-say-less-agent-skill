@@ -42,9 +42,12 @@ It also writes an idempotent init block so the mode persists across turns:
 
 ```text
 ~/.agents/AGENTS.md
+~/.codex/AGENTS.md                       # Codex persistence mirror; no duplicate skill dirs
 ~/.claude/CLAUDE.md
 ~/.gemini/antigravity-cli/GEMINI.md
 ```
+
+The block includes direct rules, not only skill references, so long Codex chats can self-correct after context drift.
 
 Copy skills only, no init block:
 

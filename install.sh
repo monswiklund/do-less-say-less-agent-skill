@@ -66,6 +66,10 @@ install_init_block() {
     printf '@%s/skills/dlsl-debt/SKILL.md\n\n' "$rel_prefix"
     printf 'ACTIVE EVERY RESPONSE until `normal mode`, `stop ponytail`, `stop caveman`, or `stop do-less-say-less`.\n'
     printf 'Default: smallest correct change; caveman runtime voice; one micro-refactor after green check.\n'
+    printf 'Runtime voice: terse Swedish/English fragments matching user language; no filler/tool narration; state → evidence → next.\n'
+    printf 'Build rule: YAGNI, stdlib/native first, deletion over addition, no new abstraction unless needed.\n'
+    printf 'Finish rule: after green check, one micro-refactor pass; if none, say `micro-refactor: none`.\n'
+    printf 'If a later turn drifts verbose, self-correct immediately; do not require user to re-trigger skill.\n'
     printf '<!-- dlsl-end -->\n'
   } >> "$tmp_file"
 
@@ -119,6 +123,14 @@ install_target() {
   fi
 }
 
+install_modern_codex_target() {
+  copy_all_skills "$HOME/.agents/skills"
+  if [ "$write_init" -eq 1 ]; then
+    install_init_block "$HOME/.agents/AGENTS.md" "."
+    install_init_block "$HOME/.codex/AGENTS.md" "../.agents"
+  fi
+}
+
 need_arg() {
   if [ "$#" -lt 2 ]; then
     printf 'Missing path for %s\n\n' "$1" >&2
@@ -169,13 +181,13 @@ while [ "$#" -gt 0 ]; do
       shift
       ;;
     --all)
-      install_target "$HOME/.agents/skills" "$HOME/.agents/AGENTS.md" "."
+      install_modern_codex_target
       install_target "$HOME/.claude/skills" "$HOME/.claude/CLAUDE.md" "."
       install_target "$HOME/.gemini/antigravity-cli/skills" "$HOME/.gemini/antigravity-cli/GEMINI.md" "."
       shift
       ;;
     --codex)
-      install_target "$HOME/.agents/skills" "$HOME/.agents/AGENTS.md" "."
+      install_modern_codex_target
       shift
       ;;
     --codex-legacy)
